@@ -5,6 +5,7 @@ MACHINE_ENDIANNESS ?= "le"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-image kernel-devicetree"
 MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 MACHINE_FEATURES = "ext2 ipsec nfs pci smbfs usbgadget usbhost vfat"
+MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc qemu-usermode"
 
 require conf/multilib.conf
 
