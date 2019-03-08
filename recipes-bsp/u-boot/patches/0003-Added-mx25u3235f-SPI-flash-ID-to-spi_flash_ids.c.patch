@@ -1,7 +1,7 @@
 From f4a7ce4a8e57c586123c8ea89e83efb2d122713c Mon Sep 17 00:00:00 2001
 From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
 Date: Wed, 13 Feb 2019 04:00:16 +0800
-Subject: [PATCH] Added mx25u3235f SPI flash ID to spi_flash_ids.c
+Subject: [PATCH 3/5] Added mx25u3235f SPI flash ID to spi_flash_ids.c
 
 ---
  drivers/mtd/spi/spi_flash_ids.c | 1 +

@@ -1,0 +1,36 @@
+From 1c3187206cd05772f6b14f54c63b1ec31730f468 Mon Sep 17 00:00:00 2001
+From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
+Date: Sat, 9 Mar 2019 02:11:56 +0800
+Subject: [PATCH 4/4] Fixed implicit declaration of function get_ref_clk error in
+ ddr/wtmi_ddr/clock.c
+
+---
+ ddr/wtmi_ddr/clock.h | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/ddr/wtmi_ddr/clock.h b/ddr/wtmi_ddr/clock.h
+index d5e8dcd..3d6ae91 100644
+--- a/ddr/wtmi_ddr/clock.h
++++ b/ddr/wtmi_ddr/clock.h
+@@ -88,17 +88,7 @@
+ /* (GBE0 and GBE1 have reversed logic) */
+ #define SB_ALL_CLK_ENABLE			(BIT19 | BIT20)
+ 
+-enum clock_src {
+-       TBG_A,
+-       TBG_B
+-};
+-
+-enum clock_line {
+-       TBG_A_P = 0,
+-       TBG_B_P = 1,
+-       TBG_A_S = 2,
+-       TBG_B_S = 3
+-};
++#include "../../wtmi/clock.h"
+ 
+ /*
+  * North Bridge Clocks
+-- 
+2.14.2
+

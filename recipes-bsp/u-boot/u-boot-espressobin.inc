@@ -5,4 +5,4 @@ SECTION = "bootloaders"
 
 EXTRA_OEMAKE += "DEVICE_TREE=${UBOOT_DEVICE_TREE}"
 
-COMPATIBLE_MACHINE = "(espressobin-v5)"
+COMPATIBLE_MACHINE = "(espressobin-v5|espressobin-v7)"

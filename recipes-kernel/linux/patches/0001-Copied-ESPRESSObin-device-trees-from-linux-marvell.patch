@@ -1,0 +1,275 @@
+From 27eed28b90a0aa035b62bc4f9b81c55e7734cc39 Mon Sep 17 00:00:00 2001
+From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
+Date: Tue, 12 Mar 2019 19:44:01 +0800
+Subject: [PATCH] Copied ESPRESSObin device trees from linux-marvell
+
+---
+ .../dts/marvell/armada-3720-espressobin-emmc.dts   | 37 +++++++++++
+ .../boot/dts/marvell/armada-3720-espressobin.dts   |  9 +++
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi       | 71 +++++++++++++++++++++-
+ include/dt-bindings/phy/phy-utmi-mvebu.h           | 19 ++++++
+ 4 files changed, 134 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
+ create mode 100644 include/dt-bindings/phy/phy-utmi-mvebu.h
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
+new file mode 100644
+index 000000000000..0918ae8478cf
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Globalscale Marvell ESPRESSOBin Board V7 with eMMC
++ * Copyright (C) 2018 Marvell
++ *
++ * Romain Perier <romain.perier@free-electrons.com>
++ * Konstantin Porotchkin <kostap@marvell.com>
++ *
++ */
++
++#include "armada-3720-espressobin.dts"
++
++/ {
++	model = "Globalscale Marvell ESPRESSOBin Board (eMMC)";
++	compatible = "globalscale,espressobin-emmc", "globalscale,espressobin",
++		     "marvell,armada3720", "marvell,armada3710";
++};
++
++/* U11 */
++&sdhci0 {
++	non-removable;
++	bus-width = <8>;
++	mmc-ddr-1_8v;
++	mmc-hs400-1_8v;
++	marvell,pad-type = "fixed-1-8v";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_pins>;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mmccard: mmccard@0 {
++		compatible = "mmc-card";
++		reg = <0>;
++	};
++};
++
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+index 3ab25ad402b9..d8e4797b759b 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+@@ -46,15 +46,21 @@
+ /* J9 */
+ &pcie0 {
+ 	status = "okay";
++	/* Generic PHY, providing serdes lanes */
++	phys = <&a3700_comphy1 0>;
+ };
+ 
+ /* J6 */
+ &sata {
+ 	status = "okay";
++	/* Generic PHY, providing serdes lanes */
++	phys = <&a3700_comphy2 0>;
+ };
+ 
+ /* J1 */
+ &sdhci1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio_pins>;
+ 	wp-inverted;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
+@@ -110,6 +116,9 @@
+ /* J7 */
+ &usb3 {
+ 	status = "okay";
++	/* Generic PHY, providing serdes lanes */
++	phys = <&a3700_comphy0 0>;
++	phy-names = "usb";
+ };
+ 
+ /* J8 */
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index d9531e242eb4..e0bbdb5b7c09 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/phy/phy-utmi-mvebu.h>
+ 
+ / {
+ 	model = "Marvell Armada 37xx SoC";
+@@ -18,6 +19,8 @@
+ 	#size-cells = <2>;
+ 
+ 	aliases {
++		ethernet0 = &eth0;
++		ethernet1 = &eth1;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+ 	};
+@@ -35,6 +38,11 @@
+ 			reg = <0 0x4000000 0 0x200000>;
+ 			no-map;
+ 		};
++
++		tee@4400000 {
++			reg = <0 0x4400000 0 0x1000000>;
++			no-map;
++		};
+ 	};
+ 
+ 	cpus {
+@@ -79,6 +87,13 @@
+ 			compatible = "simple-bus";
+ 			/* 32M internal register @ 0xd000_0000 */
+ 			ranges = <0x0 0x0 0xd0000000 0x2000000>;
++			dma-coherent;
++
++			wdt: watchdog-timer@8300 {
++				compatible = "marvell,armada-3700-wdt";
++				reg = <0xd064 0x4>, <0x8300 0x40>;
++				clocks = <&xtalclk>;
++			};
+ 
+ 			spi0: spi@10600 {
+ 				compatible = "marvell,armada-3700-spi";
+@@ -158,6 +173,31 @@
+ 				#clock-cells = <1>;
+ 			};
+ 
++			a3700_comphy: comphy@18300 {
++				compatible = "marvell,comphy-a3700";
++				reg = <0x18300 0x300>, <0x1f000 0x1000>,
++				      <0x5c000 0x1000>, <0xe0178 0x8>;
++				reg-names = "comphy", "serdes",
++					    "usb3_gbe1_phy", "indirect_ahci";
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				a3700_comphy0: phy@0 {
++					reg = <0>;
++					#phy-cells = <1>;
++				};
++
++				a3700_comphy1: phy@1 {
++					reg = <1>;
++					#phy-cells = <1>;
++				};
++
++				a3700_comphy2: phy@2 {
++					reg = <2>;
++					#phy-cells = <1>;
++				};
++			};
++
+ 			tbg: tbg@13200 {
+ 				compatible = "marvell,armada-3700-tbg-clock";
+ 				reg = <0x13200 0x100>;
+@@ -221,6 +261,11 @@
+ 					groups = "uart2";
+ 					function = "uart";
+ 				};
++
++				mmc_pins: mmc-pins {
++					groups = "emmc_nb";
++					function = "emmc";
++				};
+ 			};
+ 
+ 			nb_pm: syscon@14000 {
+@@ -253,6 +298,11 @@
+ 					function = "mii";
+ 				};
+ 
++				sdio_pins: sdio-pins {
++					groups = "sdio_sb";
++					function = "sdio";
++				};
++
+ 			};
+ 
+ 			eth0: ethernet@30000 {
+@@ -289,11 +339,19 @@
+ 
+ 			usb2: usb@5e000 {
+ 				compatible = "marvell,armada-3700-ehci";
+-				reg = <0x5e000 0x2000>;
++				reg = <0x5e000 0x1000>;
+ 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+ 
++			utmi_usb2: utmi@5f000 {
++				compatible = "marvell,armada-3700-utmi-phy";
++				reg = <0x5f000 0x1000>;
++				utmi-port = <UTMI_PHY_TO_USB2_HOST0>;
++				#phy-cells = <0>;
++				status = "disabled";
++			};
++
+ 			xor@60900 {
+ 				compatible = "marvell,armada-3700-xor";
+ 				reg = <0x60900 0x100>,
+@@ -319,6 +377,7 @@
+ 				interrupt-names = "mem", "ring0", "ring1",
+ 						  "ring2", "ring3", "eip";
+ 				clocks = <&nb_periph_clk 15>;
++				cell-index = <0>;
+ 			};
+ 
+ 			sdhci1: sdhci@d0000 {
+@@ -345,7 +404,7 @@
+ 
+ 			sata: sata@e0000 {
+ 				compatible = "marvell,armada-3700-ahci";
+-				reg = <0xe0000 0x2000>;
++				reg = <0xe0000 0x178>;
+ 				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+@@ -388,4 +447,12 @@
+ 			};
+ 		};
+ 	};
++
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++			status = "okay";
++		};
++	};
+ };
+diff --git a/include/dt-bindings/phy/phy-utmi-mvebu.h b/include/dt-bindings/phy/phy-utmi-mvebu.h
+new file mode 100644
+index 000000000000..a132d7300ef4
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-utmi-mvebu.h
+@@ -0,0 +1,19 @@
++/*
++ * Copyright (C) 2018 Marvell
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef _DT_BINDINGS_PHY_UTMI_MVEBU
++#define _DT_BINDINGS_PHY_UTMI_MVEBU
++
++#define UTMI_PHY_TO_USB3_HOST0		0
++#define UTMI_PHY_TO_USB3_HOST1		1
++#define UTMI_PHY_TO_USB3_DEVICE0	2
++#define UTMI_PHY_TO_USB2_HOST0		3
++#define UTMI_PHY_INVALID		0xff
++
++#endif /* _DT_BINDINGS_PHY_UTMI_MVEBU */
+-- 
+2.14.2
+

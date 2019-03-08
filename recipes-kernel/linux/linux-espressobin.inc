@@ -15,7 +15,9 @@ do_configure_prepend () {
     merge_config.sh -m ${B}/.config ${@' '.join([s for s in src_patches(d, True) if s.endswith('.cfg')])}
 }
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/configs:"
+
 SRC_URI += "file://defconfig"
 SRC_URI += "${@bb.utils.contains('TUNE_FEATURES', 'bigendian', 'file://bigendian.cfg',  '', d)}"
 
-COMPATIBLE_MACHINE = "(espressobin-v5)"
+COMPATIBLE_MACHINE = "(espressobin-v5|espressobin-v7)"

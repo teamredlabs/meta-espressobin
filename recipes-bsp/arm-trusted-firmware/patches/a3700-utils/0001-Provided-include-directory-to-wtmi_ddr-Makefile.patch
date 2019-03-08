@@ -1,7 +1,7 @@
 From 1f7c90e253602939d687ae5984761284e660f3d0 Mon Sep 17 00:00:00 2001
 From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
 Date: Fri, 20 Jul 2018 00:52:22 +0800
-Subject: [PATCH] Provided include directory to wtmi_ddr Makefile
+Subject: [PATCH 1/4] Provided include directory to wtmi_ddr Makefile
 
 ---
  ddr/wtmi_ddr/Makefile | 3 ++-

@@ -55,7 +55,7 @@ EXTRA_OEMAKE += " \
     BOOTDEV=${ATF_BOOT_DEV} \
     PARTNUM=${ATF_BOOT_PART} \
     MV_DDR_PATH="${WORKDIR}/mv-ddr" \
-    WTP="${WORKDIR}/A3700-utils" \
+    WTP="${SRCDIR_a3700-utils}" \
     USE_COHERENT_MEM=0 \
     LOG_LEVEL=20 \
     DEBUG=0 \
@@ -85,4 +85,4 @@ do_deploy () {
 addtask deploy before do_build after do_compile
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(espressobin-v5)"
+COMPATIBLE_MACHINE = "(espressobin-v5|espressobin-v7)"
