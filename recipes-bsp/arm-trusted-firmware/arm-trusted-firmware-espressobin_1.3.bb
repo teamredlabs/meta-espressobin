@@ -66,6 +66,7 @@ SRC_URI_append = "\
     file://0001-Provided-include-directory-to-wtmi_ddr-Makefile.patch;patchdir=${SRCDIR_a3700-utils} \
     file://0002-parser-add-preset_ddr_conf-field-for-preset-ddr-sett.patch;patchdir=${SRCDIR_a3700-utils} \
     file://0003-ddr-update-ddr-topology-for-ddr3-ddr4.patch;patchdir=${SRCDIR_a3700-utils} \
+    file://0004-Fixed-implicit-declaration-of-function-get_ref_clk-e.patch;patchdir=${SRCDIR_a3700-utils} \
 "
 
 SRC_URI_append_espressobin-v7 = "\

@@ -2,7 +2,10 @@ SUMMARY = "ARM Trusted Firmware for Globalscale Marvell ESPRESSObin"
 DESCRIPTION = "ARM Trusted Firmware for Globalscale Marvell ESPRESSObin"
 HOMEPAGE = "https://github.com/ARM-software/arm-trusted-firmware"
 
-PROVIDES += "arm-trusted-firmware"
+PROVIDES += "\
+    arm-trusted-firmware \
+    virtual/firmware \
+"
 
 DEPENDS_append = " \
     coreutils-native \

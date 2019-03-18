@@ -2,10 +2,28 @@ require conf/machine/include/arm/espressobin-arch-arm64.inc
 
 MACHINEOVERRIDES =. "espressobin:"
 MACHINE_ENDIANNESS ?= "le"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-image kernel-devicetree"
-MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
-MACHINE_FEATURES = "ext2 ipsec nfs pci smbfs usbgadget usbhost vfat"
-MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc qemu-usermode"
+
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
+    kernel-devicetree \
+    kernel-image \
+"
+MACHINE_EXTRA_RRECOMMENDS += "\
+    kernel-modules \
+"
+MACHINE_FEATURES = "\
+    ext2 \
+    ipsec \
+    nfs \
+    pci \
+    smbfs \
+    usbgadget \
+    usbhost \
+    vfat \
+"
+MACHINE_FEATURES_BACKFILL_CONSIDERED = "\
+    rtc \
+    qemu-usermode \
+"
 
 require conf/multilib.conf
 
@@ -15,6 +33,7 @@ DEFAULTTUNE ?= "${@bb.utils.contains("MACHINE_ENDIANNESS", "le", "aarch64", "aar
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-espressobin"
 PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot-espressobin"
+PREFERRED_PROVIDER_virtual/firmware ?= "arm-trusted-firmware-espressobin"
 
 PREFERRED_PROVIDER_linux ?= "linux-espressobin"
 PREFERRED_PROVIDER_u-boot ?= "u-boot-espressobin"
