@@ -9,9 +9,8 @@ PROVIDES += "\
 
 DEPENDS_append = " \
     coreutils-native \
-    openssl-native \
-    virtual/bootloader \
     lib32-gcc-cross-arm \
+    openssl-native \
     unzip-native \
 "
 
@@ -64,6 +63,8 @@ EXTRA_OEMAKE += " \
     DEBUG=0 \
     SECURE=1 \
 "
+
+do_compile[depends] = "virtual/bootloader:do_deploy"
 
 do_compile () {
     oe_runmake all fip
