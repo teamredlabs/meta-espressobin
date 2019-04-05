@@ -46,6 +46,7 @@ WORKDIR_CM3_append = "${PN}/${PV}-${PR}"
 STAGING_DIR_TARGET_CM3 = "${WORKDIR_CM3}/lib32-recipe-sysroot"
 STAGING_INCDIR_CM3 = "${STAGING_DIR_TARGET_CM3}/usr/include"
 
+export DIR_TARGET_CM3 = "${STAGING_DIR_TARGET_CM3}"
 export CROSS_CM3 = "${STAGING_BINDIR_NATIVE}/${TARGET_SYS_CM3}/${TARGET_SYS_CM3}-"
 export INCLUDE_CM3 = "${STAGING_INCDIR_CM3}"
 
@@ -64,6 +65,14 @@ EXTRA_OEMAKE += " \
     SECURE=1 \
 "
 
+cleancm3 () {
+    rm -rf "${DIR_TARGET_CM3}"
+}
+
+do_cleanall_append () {
+    bb.build.exec_func("cleancm3", d)
+}
+
 do_compile[depends] = "virtual/bootloader:do_deploy"
 
 do_compile () {
@@ -75,15 +84,15 @@ do_install[noexec] = "1"
 ATF_DEPLOYDIR  = "${S}/build/${ATF_PLATFORM}/release"
 
 do_deploy () {
-    install -d ${DEPLOYDIR}
+    install -d "${DEPLOYDIR}"
     
-    install -m 0644 ${ATF_DEPLOYDIR}/flash-image.bin ${DEPLOYDIR}/flash-image-${MACHINE}-${PV}-${PR}.bin
-    ln -sf flash-image-${MACHINE}-${PV}-${PR}.bin ${DEPLOYDIR}/flash-image-${MACHINE}.bin
-    ln -sf flash-image-${MACHINE}-${PV}-${PR}.bin ${DEPLOYDIR}/flash-image.bin
+    install -m 0644 "${ATF_DEPLOYDIR}/flash-image.bin" "${DEPLOYDIR}/flash-image-${MACHINE}-${PV}-${PR}.bin"
+    ln -sf "flash-image-${MACHINE}-${PV}-${PR}.bin" "${DEPLOYDIR}/flash-image-${MACHINE}.bin"
+    ln -sf "flash-image-${MACHINE}-${PV}-${PR}.bin" "${DEPLOYDIR}/flash-image.bin"
 
-    install -m 0644 ${ATF_DEPLOYDIR}/uart-images.tgz ${DEPLOYDIR}/uart-images-${MACHINE}-${PV}-${PR}.tgz
-    ln -sf uart-images-${MACHINE}-${PV}-${PR}.tgz ${DEPLOYDIR}/uart-images-${MACHINE}.tgz
-    ln -sf uart-images-${MACHINE}-${PV}-${PR}.tgz ${DEPLOYDIR}/uart-images.tgz
+    install -m 0644 "${ATF_DEPLOYDIR}/uart-images.tgz" "${DEPLOYDIR}/uart-images-${MACHINE}-${PV}-${PR}.tgz"
+    ln -sf "uart-images-${MACHINE}-${PV}-${PR}.tgz" "${DEPLOYDIR}/uart-images-${MACHINE}.tgz"
+    ln -sf "uart-images-${MACHINE}-${PV}-${PR}.tgz" "${DEPLOYDIR}/uart-images.tgz"
 }
 
 addtask deploy before do_build after do_compile
