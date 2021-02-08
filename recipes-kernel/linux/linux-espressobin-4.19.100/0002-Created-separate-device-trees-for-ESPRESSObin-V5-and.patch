@@ -1,45 +1,45 @@
-From 16175ee8dcbcaef74d8d15dfcabb0cb0a47a1a4e Mon Sep 17 00:00:00 2001
+From 1f49b82254926aceb22b78af3f63fc5fa1081e6b Mon Sep 17 00:00:00 2001
 From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
 Date: Mon, 11 Mar 2019 16:00:21 +0800
 Subject: [PATCH] Created separate device trees for ESPRESSObin V5 and V7
 
 ---
  arch/arm64/boot/dts/marvell/Makefile               |  2 ++
- .../dts/marvell/armada-3720-espressobin-v5.dts     |  5 +++++
- .../dts/marvell/armada-3720-espressobin-v7.dts     | 23 ++++++++++++++++++++++
+ .../marvell/armada-3720-espressobin-v5-emmc.dts    |  5 +++++
+ .../marvell/armada-3720-espressobin-v7-emmc.dts    | 23 ++++++++++++++++++++++
  3 files changed, 30 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5.dts
- create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5-emmc.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
 
 diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index ea9d49f2a911..d39e6770d550 100644
+index ea9d49f..f7df331 100644
 --- a/arch/arm64/boot/dts/marvell/Makefile
 +++ b/arch/arm64/boot/dts/marvell/Makefile
 @@ -2,6 +2,8 @@
  # Mvebu SoC Family
  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v5.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v7.dtb
++dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v5-emmc.dtb
++dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v7-emmc.dtb
  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
  dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
  dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-mcbin.dtb
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5.dts
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5-emmc.dts
 new file mode 100644
-index 000000000000..956cebf5c9aa
+index 0000000..3e9b0eb
 --- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v5-emmc.dts
 @@ -0,0 +1,5 @@
 +/*
 + * Device Tree file for Globalscale Marvell ESPRESSOBin Board V5
 + */
 +
 +#include "armada-3720-espressobin-emmc.dts"
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
 new file mode 100644
-index 000000000000..887962201c31
+index 0000000..2641a8b
 --- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
 @@ -0,0 +1,23 @@
 +/*
 + * Device Tree file for Globalscale Marvell ESPRESSOBin Board V7
@@ -65,5 +65,5 @@ index 000000000000..887962201c31
 +    };
 +};
 -- 
-2.14.2
+2.9.0
 

@@ -11,5 +11,5 @@ ATF_BOOT_PART = "0"
 UBOOT_MACHINE = "mvebu_espressobin-88f3720_defconfig"
 UBOOT_DEVICE_TREE = "armada-3720-espressobin"
 
-KERNEL_DEVICETREE = "marvell/armada-3720-espressobin-v5.dtb"
-IMAGE_BOOT_FILES_append = " Image-armada-3720-espressobin-v5.dtb;fdt.dtb"
+KERNEL_DEVICETREE = "marvell/armada-3720-espressobin-v5-emmc.dtb"
+IMAGE_BOOT_FILES_append = " Image-armada-3720-espressobin-v5-emmc.dtb;fdt.dtb"
