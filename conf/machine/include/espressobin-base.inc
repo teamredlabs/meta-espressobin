@@ -37,7 +37,6 @@ PREFERRED_PROVIDER_virtual/firmware ?= "arm-trusted-firmware-espressobin"
 
 PREFERRED_PROVIDER_linux ?= "linux-espressobin"
 PREFERRED_PROVIDER_u-boot ?= "u-boot-espressobin"
-PREFERRED_PROVIDER_u-boot-fw-utils ?= "u-boot-espressobin-fw-utils"
 PREFERRED_PROVIDER_arm-trusted-firmware ?= "arm-trusted-firmware-espressobin"
 
 IMAGE_FSTYPES += "tar.bz2"
