@@ -1,7 +1,7 @@
-From 2d4847d8ba21bddd1d2da28692b8c0123e304698 Mon Sep 17 00:00:00 2001
+From 7f369659ea4afa724b70f79f945bd17bdb9edc0c Mon Sep 17 00:00:00 2001
 From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
-Date: Wed, 13 Mar 2019 18:06:13 +0800
-Subject: [PATCH 5/5] Swapped sdhci0 and sdhci1 to reflect linux device tree
+Date: Tue, 16 Feb 2021 10:12:49 +0800
+Subject: [PATCH] Swapped sdhci0 and sdhci1 to reflect linux device tree
 
 ---
  arch/arm/dts/armada-3720-espressobin.dts | 10 +++++-----
@@ -9,10 +9,10 @@ Subject: [PATCH 5/5] Swapped sdhci0 and sdhci1 to reflect linux device tree
  2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/arch/arm/dts/armada-3720-espressobin.dts b/arch/arm/dts/armada-3720-espressobin.dts
-index b25f40e4d5..f26776ca58 100644
+index 2ab039c..e87058b 100644
 --- a/arch/arm/dts/armada-3720-espressobin.dts
 +++ b/arch/arm/dts/armada-3720-espressobin.dts
-@@ -68,9 +68,9 @@
+@@ -31,9 +31,9 @@
  		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
  	};
  
@@ -24,30 +24,31 @@ index b25f40e4d5..f26776ca58 100644
  		regulator-min-microvolt = <1800000>;
  		regulator-max-microvolt = <3300000>;
  		regulator-type = "voltage";
-@@ -132,15 +132,15 @@
- 	status = "okay";
+@@ -101,16 +101,16 @@
  };
  
+ /* J1 */
 -&sdhci0 {
 +&sdhci1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdio_pins>;
  	bus-width = <4>;
 -	vqmmc-supply = <&vcc_sd_reg0>;
 +	vqmmc-supply = <&vcc_sd_reg1>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdio_pins>;
  	status = "okay";
  };
  
+ /* U11 */
 -&sdhci1 {
 +&sdhci0 {
  	non-removable;
  	bus-width = <8>;
  	mmc-ddr-1_8v;
 diff --git a/arch/arm/dts/armada-37xx.dtsi b/arch/arm/dts/armada-37xx.dtsi
-index 84a47289a8..5fb68d5925 100644
+index bf9cf7d..f6cdc76 100644
 --- a/arch/arm/dts/armada-37xx.dtsi
 +++ b/arch/arm/dts/armada-37xx.dtsi
-@@ -142,7 +142,7 @@
+@@ -226,7 +226,7 @@
  				};
  			};
  
@@ -56,7 +57,7 @@ index 84a47289a8..5fb68d5925 100644
  				compatible = "marvell,armada-3700-sdhci",
  				"marvell,sdhci-xenon";
  				reg = <0xd0000 0x300
-@@ -150,7 +150,7 @@
+@@ -234,7 +234,7 @@
  				status = "disabled";
  			};
  
@@ -66,5 +67,5 @@ index 84a47289a8..5fb68d5925 100644
  				"marvell,sdhci-xenon";
  				reg = <0xd8000 0x300
 -- 
-2.14.2
+2.9.0
 

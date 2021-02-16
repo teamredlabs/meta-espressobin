@@ -1,7 +1,7 @@
 From 255b9cc9c1efb9bc4b305b46fb2ee41ec1a9572f Mon Sep 17 00:00:00 2001
 From: Jason Hung <jhung@globalscaletechnologies.com>
 Date: Tue, 3 Jul 2018 10:50:50 +0800
-Subject: [PATCH 3/3] mtd: add gigadevice gd25lq32d spi flash support
+Subject: [PATCH 2/2] mtd: add gigadevice gd25lq32d spi flash support
 
 Add GigaDevice GD25LQ32D spi flash (4MBytes) support
 ---
