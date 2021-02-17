@@ -15,11 +15,13 @@ do_configure_prepend () {
     merge_config.sh -m ${B}/.config ${@' '.join([s for s in src_patches(d, True) if s.endswith('.cfg')])}
 }
 
+BB_GIT_SHALLOW = "1"
+BB_GIT_SHALLOW_DEPTH = "1"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/configs:"
 
 SRC_URI += "file://defconfig"
 SRC_URI += "${@bb.utils.contains('TUNE_FEATURES', 'bigendian', 'file://bigendian.cfg',  '', d)}"
-# SRC_URI += "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git;protocol=https;tag=v${PV};nobranch=1"
 SRC_URI += "git://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux;protocol=https;tag=v${PV};nobranch=1"
 
 S = "${WORKDIR}/git"
