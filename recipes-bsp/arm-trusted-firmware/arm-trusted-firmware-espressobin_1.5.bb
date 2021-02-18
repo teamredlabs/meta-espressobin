@@ -1,7 +1,10 @@
 require arm-trusted-firmware-espressobin.inc
 
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://license.md;md5=829bdeb34c1d9044f393d5a16c068371"
+LIC_FILES_CHKSUM = "file://license.rst;md5=e927e02bca647e14efd87e9e914b2443"
+
+BB_GIT_SHALLOW = "1"
+BB_GIT_SHALLOW_DEPTH = "1"
 
 SRCROOT = "github.com/MarvellEmbeddedProcessors"
 
@@ -13,8 +16,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/patches/atf:"
 FILESEXTRAPATHS_prepend_espressobin-v7 := "${THISDIR}/patches-v7/atf:"
 
 SRCREPO_atf = "${SRCROOT}/atf-marvell.git"
-SRCREV_atf = "${AUTOREV}"
-SRCBRANCH_atf = "atf-v1.3-armada-17.10"
+SRCREV_atf = "1f8ca7e01d4ac7023aea0eeb4c8a4b98dcf05760"
+SRCBRANCH_atf = "atf-v1.5-armada-18.12"
 SRCNAME_atf = "atf"
 SRCDIR_atf = "${WORKDIR}/${SRCNAME_atf}"
 SRCCFG_atf = "branch=${SRCBRANCH_atf};name=${SRCNAME_atf};destsuffix=${SRCNAME_atf}"
@@ -36,8 +39,8 @@ SRC_URI_append_espressobin-v7 = "\
 #######################################
 
 SRCREPO_mv-ddr = "${SRCROOT}/mv-ddr-marvell.git"
-SRCREV_mv-ddr = "${AUTOREV}"
-SRCBRANCH_mv-ddr = "mv_ddr-armada-17.10"
+SRCREV_mv-ddr = "618dadd1491eb2f7b2fd74313c04f7accddae475"
+SRCBRANCH_mv-ddr = "mv_ddr-armada-18.12"
 SRCNAME_mv-ddr = "mv-ddr"
 SRCDIR_mv-ddr = "${WORKDIR}/${SRCNAME_mv-ddr}"
 SRCCFG_mv-ddr = "branch=${SRCBRANCH_mv-ddr};name=${SRCNAME_mv-ddr};destsuffix=${SRCNAME_mv-ddr}"
@@ -53,8 +56,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/patches/a3700-utils:"
 FILESEXTRAPATHS_prepend_espressobin-v7 := "${THISDIR}/patches-v7/a3700-utils:"
 
 SRCREPO_a3700-utils = "${SRCROOT}/A3700-utils-marvell.git"
-SRCREV_a3700-utils = "${AUTOREV}"
-SRCBRANCH_a3700-utils = "A3700_utils-armada-17.10"
+SRCREV_a3700-utils = "1a13f2fe40f9a5405c92bb78a5eb60724b1d4a38"
+SRCBRANCH_a3700-utils = "A3700_utils-armada-18.12-fixed"
 SRCNAME_a3700-utils = "a3700-utils"
 SRCDIR_a3700-utils = "${WORKDIR}/${SRCNAME_a3700-utils}"
 SRCCFG_a3700-utils = "branch=${SRCBRANCH_a3700-utils};name=${SRCNAME_a3700-utils};destsuffix=${SRCNAME_a3700-utils}"
@@ -63,10 +66,7 @@ SRCURI_a3700-utils = "${SRCREPO_a3700-utils};${SRCCFG_a3700-utils}"
 SRC_URI_append = " git://${SRCURI_a3700-utils};protocol=https"
 
 SRC_URI_append = "\
-    file://0001-Provided-include-directory-to-wtmi_ddr-Makefile.patch;patchdir=${SRCDIR_a3700-utils} \
-    file://0002-parser-add-preset_ddr_conf-field-for-preset-ddr-sett.patch;patchdir=${SRCDIR_a3700-utils} \
-    file://0003-ddr-update-ddr-topology-for-ddr3-ddr4.patch;patchdir=${SRCDIR_a3700-utils} \
-    file://0004-Fixed-implicit-declaration-of-function-get_ref_clk-e.patch;patchdir=${SRCDIR_a3700-utils} \
+    file://0001-Provided-include-directory-to-wtmi-Makefiles.patch;patchdir=${SRCDIR_a3700-utils} \
 "
 
 SRC_URI_append_espressobin-v7 = "\

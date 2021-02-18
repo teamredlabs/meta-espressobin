@@ -7,11 +7,11 @@ Subject: [PATCH 2/5] buildtim: add argument for build primary or secondary
 Modify the buildtim script to support to build primary or
 secondary flash image.
 ---
- script/buildtim.sh | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ script/buildtim.sh | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
 diff --git a/script/buildtim.sh b/script/buildtim.sh
-index 1587961..62d2753 100755
+index a512f8c..cbe7b90 100755
 --- a/script/buildtim.sh
 +++ b/script/buildtim.sh
 @@ -9,11 +9,12 @@
@@ -32,7 +32,7 @@ index 1587961..62d2753 100755
  #
  
  DATE=`date +%d%m%Y`
-@@ -23,13 +24,17 @@ CLOCKSPATH=$4
+@@ -23,8 +24,9 @@ WTPPATH=$4
  PRESET=$5
  DDRTOPOLOGY=$6
  BOOTPART=$7
@@ -42,7 +42,9 @@ index 1587961..62d2753 100755
 +DEBUG=$9
 +OUTFILE=${10}
  
- # All file names extention
+ CLOCKSPATH=$WTPPATH/tim/ddr
+ SYSINITPATH=$WTPPATH/wtmi/sys_init
+@@ -34,6 +36,9 @@ SYSINITLOADADDR=`sed -n '/. = 0x1fff[0-9|a-f]*/p' $SYSINITPATH/sys_init.ld | awk
  FILEEXT="txt"
  # Image definition files name prefix
  IMGPREF="img"
@@ -52,7 +54,7 @@ index 1587961..62d2753 100755
  # Number of images excepting TIM
  IMGSNUM=`ls -l $IMGPATH/$IMGPREF*.$FILEEXT | wc -l`
  # Reserved area definition for TIM/NTIM - file name prefix
-@@ -48,15 +53,18 @@ DLLTUNFILE=$CLOCKSPATH/dll_tune.$FILEEXT
+@@ -52,15 +57,18 @@ GETDDRPARAMS=$WTPPATH/script/getddrparams.sh
  
  # TIM/NTIM image definition file name prefix
  TIMPREF="tim"
@@ -74,7 +76,7 @@ index 1587961..62d2753 100755
  # TIMN image definition file name prefix
  TIMNPREF="timn"
  # Reserved area definition for TIMN - file name prefix
-@@ -80,7 +88,7 @@ usage () {
+@@ -84,14 +92,14 @@ usage () {
  	echo "$0 - script for creating TIM/NTIM/TIMN image descriptors"
  	echo ""
  	echo "$0 <trusted> <boot_device> <files_path> <clocks_path> <clocks_preset> <ddr_topology>"\
@@ -83,10 +85,10 @@ index 1587961..62d2753 100755
  	echo " <trusted>     - trusted/non trusted (supported values 0 and 1)"
  	echo " <boot_device> - Boot device (Supported values SPINOR/SPINAND/EMMCNORM/EMMCALT/SATA/UART)"
  	echo " <files_path>  - Path to image and keys descriptors text files"
-@@ -88,6 +96,7 @@ usage () {
+ 	echo " <clocks_path> - Path to clocks and DDR initialization files"
  	echo " <clocks_preset> - Name of clocks preset to use - see \"build.txt\" for details"
  	echo " <ddr_topology> - Index of DDR topology map"
- 	echo " <part_num>    - partition number of the boot device"
+-	echo " <part_num>    - partition number of the boot device"
 +	echo " <primary>     - build for primary or secondary image"
  	echo " <debug>       - debug flag to enable TIM DDR package's log"
  	echo " <output>      - Output TIM/NTIM file name"

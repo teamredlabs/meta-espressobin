@@ -5,19 +5,20 @@ Subject: [PATCH 3/5] git: add clocks_ddr.txt to git ignore list
 
 add clocks_ddr.txt temporary file to git ignore list
 ---
- .gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/.gitignore b/.gitignore
-index 7abe62e..12ac289 100644
+index 53b1d45..35a3a47 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -8,4 +8,4 @@ wtmi/build/*
+@@ -8,5 +8,6 @@ wtmi/build/*
  #ignore specific files
  ddr_static.txt
  autoconf.h
--
 +clocks_ddr.txt
+ tim/ddr/ddr_tool
+ 
 -- 
 1.9.1
 

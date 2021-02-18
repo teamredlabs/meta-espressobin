@@ -17,23 +17,23 @@ Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/cert_create/Makefile b/tools/cert_create/Makefile
-index 27545bae..dc49e50b 100644
+index b0994b8..188a4b3 100644
 --- a/tools/cert_create/Makefile
 +++ b/tools/cert_create/Makefile
-@@ -77,7 +77,7 @@ INC_DIR := -I ./include -I ${PLAT_INCLUDE} -I ${OPENSSL_DIR}/include
+@@ -65,7 +65,7 @@ INC_DIR := -I ./include -I ${PLAT_INCLUDE} -I ${OPENSSL_DIR}/include
  LIB_DIR := -L ${OPENSSL_DIR}/lib
  LIB := -lssl -lcrypto
  
--CC := gcc
-+CC := ${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}
+-HOSTCC ?= gcc
++HOSTCC ?= ${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}
  
  .PHONY: all clean realclean
  
 diff --git a/tools/doimage/Makefile b/tools/doimage/Makefile
-index 653c6d39..f3123ef9 100644
+index bc74369..0adce04 100644
 --- a/tools/doimage/Makefile
 +++ b/tools/doimage/Makefile
-@@ -49,7 +49,7 @@ CFLAGS += ${DOIMAGE_CC_FLAGS}
+@@ -25,7 +25,7 @@ CFLAGS += ${DOIMAGE_CC_FLAGS}
  # could get pulled in from firmware tree.
  INCLUDE_PATHS = -I.
  
@@ -43,15 +43,15 @@ index 653c6d39..f3123ef9 100644
  
  .PHONY: all clean
 diff --git a/tools/fiptool/Makefile b/tools/fiptool/Makefile
-index df76a75e..d8f1a758 100644
+index e0e3923..533ae2b 100644
 --- a/tools/fiptool/Makefile
 +++ b/tools/fiptool/Makefile
-@@ -55,7 +55,7 @@ endif
- # Only include from local directory (see comment below).
- INCLUDE_PATHS := -I.
+@@ -29,7 +29,7 @@ endif
  
--CC := gcc
-+CC := ${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}
+ INCLUDE_PATHS := -I../../include/tools_share
+ 
+-HOSTCC ?= gcc
++HOSTCC ?= ${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}
  
  .PHONY: all clean distclean
  

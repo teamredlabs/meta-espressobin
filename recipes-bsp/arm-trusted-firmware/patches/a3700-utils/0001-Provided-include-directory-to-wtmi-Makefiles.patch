@@ -1,0 +1,66 @@
+From fdc12bb5681599f1f40d08a7ee967baca554e8d2 Mon Sep 17 00:00:00 2001
+From: "John Lawrence M. Penafiel" <penafieljlm@gmail.com>
+Date: Thu, 18 Feb 2021 15:32:30 +0800
+Subject: [PATCH] Provided include directory to wtmi Makefiles
+
+---
+ wtmi/Makefile          | 1 +
+ wtmi/fuse/Makefile     | 3 ++-
+ wtmi/sys_init/Makefile | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/wtmi/Makefile b/wtmi/Makefile
+index 43fdb76..4679e11 100644
+--- a/wtmi/Makefile
++++ b/wtmi/Makefile
+@@ -1,4 +1,5 @@
+ CROSS_CM3 ?= arm-linux-gnueabi-
++INCLUDE_CM3 ?= .
+ 
+ CC       = $(CROSS_CM3)gcc
+ 
+diff --git a/wtmi/fuse/Makefile b/wtmi/fuse/Makefile
+index 585b467..92c9a19 100644
+--- a/wtmi/fuse/Makefile
++++ b/wtmi/fuse/Makefile
+@@ -17,6 +17,7 @@
+ #*/
+ 
+ CROSS_CM3 ?= arm-linux-gnueabi-
++INCLUDE_CM3 ?= .
+ 
+ LD       = $(CROSS_CM3)ld
+ CC       = $(CROSS_CM3)gcc
+@@ -38,7 +39,7 @@ CPUOPTS  = -mthumb -mcpu=cortex-m3 -mlittle-endian
+ 
+ BINPATH  = build
+ LDSCRIPT = fuse.ld
+-INCLUDE  = -I. -I$(COMMON_PATH)
++INCLUDE  = -I. -I$(COMMON_PATH) -I$(INCLUDE_CM3)
+ 
+ CFLAGS   = -g -gdwarf-2 -Wall -fno-stack-protector $(INCLUDE) -Os $(CPUOPTS)
+ CPPFLAGS =
+diff --git a/wtmi/sys_init/Makefile b/wtmi/sys_init/Makefile
+index 30a1021..7a9d0dd 100644
+--- a/wtmi/sys_init/Makefile
++++ b/wtmi/sys_init/Makefile
+@@ -33,6 +33,7 @@
+ #*/
+ 
+ CROSS_CM3	?= arm-linux-gnueabi-
++INCLUDE_CM3 ?= .
+ 
+ LD       = $(CROSS_CM3)ld
+ CC       = $(CROSS_CM3)gcc
+@@ -57,7 +58,7 @@ VERSION_STRING		:= $(LOCAL_VERSION_STRING)-$(BUILD_STRING)
+ CPUOPTS  = -mthumb -mcpu=cortex-m3 -mlittle-endian
+ BINPATH  = build
+ LDSCRIPT = sys_init.ld
+-INCLUDE  = -I. -I$(COMMON_PATH)
++INCLUDE  = -I. -I$(COMMON_PATH) -I$(INCLUDE_CM3)
+ 
+ CFLAGS   = -g -gdwarf-2 -Wall -fno-stack-protector $(INCLUDE) -Os $(CPUOPTS) -DVERSION=\"$(VERSION_STRING)\"
+ CPPFLAGS =
+-- 
+2.9.0
+

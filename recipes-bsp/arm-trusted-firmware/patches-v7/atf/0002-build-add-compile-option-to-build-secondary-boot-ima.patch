@@ -6,23 +6,15 @@ Subject: [PATCH 2/2] build: add compile option to build secondary boot image
 add compile option 'SECONDARY_BOOTIMG' to build secondary boot image
 , the default value is enabled.
 ---
- Makefile | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ plat/marvell/a3700/common/a3700_common.mk | 10 +++++++++-
+ plat/marvell/marvell.mk                   |  4 ++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index abe5beb..93e80cc 100644
---- a/Makefile
-+++ b/Makefile
-@@ -127,6 +127,8 @@ ARO_ENABLE			:= 0
- LLC_DISABLE			:= 0
- # Make non-trusted image by default
- MARVELL_SECURE_BOOT	:= 	0
-+# build secondary bootloader image
-+SECONDARY_BOOTIMG := 1
- # Enable end point only for 7040 PCAC
- ifeq ($(PLAT),$(filter $(PLAT),a70x0_pcac))
- PCI_EP_SUPPORT			:= 1
-@@ -879,6 +881,7 @@ endif
+diff --git a/plat/marvell/a3700/common/a3700_common.mk b/plat/marvell/a3700/common/a3700_common.mk
+index 0dc187e..cc45cb6 100644
+--- a/plat/marvell/a3700/common/a3700_common.mk
++++ b/plat/marvell/a3700/common/a3700_common.mk
+@@ -181,6 +181,7 @@ endif
  #	@mv -t $(BUILD_PLAT) $(TIM_IMAGE) $(DOIMAGE_CFG) $(TIMN_IMAGE) $(TIMNCFG) $(WTMI_IMG)
  #	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then mv -t $(BUILD_PLAT) $(WTMI_ENC_IMG) OtpHash.txt; fi
  #	@find . -name "*.txt" | grep -E "CSK[[:alnum:]]_KeyHash.txt|Tim_msg.txt|TIMHash.txt" | xargs rm -f
@@ -30,12 +22,12 @@ index abe5beb..93e80cc 100644
  	@echo
  	@echo "Building secondary flash image"
  	$(TIMBUILD) $(TIMBLD2ARGS)
-@@ -903,19 +906,26 @@ endif
+@@ -205,15 +206,22 @@ endif
  	@if [ -e "$(TIMNCFG)" ]; then $(DOIMAGETOOL) -r $(TIMNCFG); fi
  	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then sed -i 's|$(WTMI_IMG)|$(WTMI_ENC_IMG)|1;s|$(BOOT_IMAGE)|$(BOOT_ENC_IMAGE)|1;' $(TIMNCFG); fi
  	$(TIM2IMG) $(TIM2IMGARGS) -o $(BUILD_PLAT)/$(FLASH_IMAGE_SEC)
 +endif
- 	@mv -t $(BUILD_PLAT) $(TIM_IMAGE) $(DOIMAGE_CFG) $(TIMN_IMAGE) $(TIMNCFG) $(WTMI_IMG)
+ 	@mv -t $(BUILD_PLAT) $(TIM_IMAGE) $(DOIMAGE_CFG) $(TIMN_IMAGE) $(TIMNCFG) $(WTMI_IMG) $(WTMI_SYSINIT_IMG) $(WTMI_MULTI_IMG)
  	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then mv -t $(BUILD_PLAT) $(WTMI_ENC_IMG) OtpHash.txt; fi
  	@find . -name "*.txt" | grep -E "CSK[[:alnum:]]_KeyHash.txt|Tim_msg.txt|TIMHash.txt" | xargs rm -f
  	@echo
@@ -49,15 +41,26 @@ index abe5beb..93e80cc 100644
  	@cat ${BUILD_PLAT}/primary.img ${BUILD_PLAT}/secondary.img > ${BUILD_PLAT}/${FLASH_IMAGE}
  	@echo "Output combine image: ${BUILD_PLAT}/${FLASH_IMAGE}"
  	@rm ${BUILD_PLAT}/primary.img ${BUILD_PLAT}/secondary.img
- else
++else
 +	@cp ${BUILD_PLAT}/primary.img ${BUILD_PLAT}/${FLASH_IMAGE}
 +	@echo "Output image: ${BUILD_PLAT}/${FLASH_IMAGE}"
 +	@rm ${BUILD_PLAT}/primary.img
 +endif
-+else
- fip: ${BUILD_PLAT}/${FIP_NAME} ${DOIMAGETOOL} ${BUILD_PLAT}/ble.bin
- 	$(shell truncate -s %128K ${BUILD_PLAT}/bl1.bin)
- 	$(shell cat ${BUILD_PLAT}/bl1.bin ${BUILD_PLAT}/${FIP_NAME} > ${BUILD_PLAT}/${BOOT_IMAGE})
+diff --git a/plat/marvell/marvell.mk b/plat/marvell/marvell.mk
+index 6d289d6..88fe8c3 100644
+--- a/plat/marvell/marvell.mk
++++ b/plat/marvell/marvell.mk
+@@ -14,6 +14,10 @@ FLASH_IMAGE			:= flash-image.bin
+ MARVELL_SECURE_BOOT		:= 0
+ $(eval $(call add_define,MARVELL_SECURE_BOOT))
+ 
++# Build secondary bootloader image
++SECONDARY_BOOTIMG		:= 1
++$(eval $(call add_define,SECONDARY_BOOTIMG))
++
+ # Enable compilation for Palladium emulation platform
+ PALLADIUM			:= 0
+ $(eval $(call add_define,PALLADIUM))
 -- 
 1.9.1
 

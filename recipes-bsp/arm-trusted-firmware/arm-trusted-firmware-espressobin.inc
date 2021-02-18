@@ -7,9 +7,15 @@ PROVIDES += "\
     virtual/firmware \
 "
 
+# DEPENDS for a3700-utils
+DEPENDS_append = "\
+    lib32-glibc \
+    lib32-gcc-cross-arm \
+"
+
+# DEPENDS for atf
 DEPENDS_append = " \
     coreutils-native \
-    lib32-gcc-cross-arm \
     openssl-native \
     unzip-native \
 "
@@ -39,31 +45,28 @@ MULTIMACH_TARGET_SYS_CM3 = "${MACHINE_ARCH_CM3}"
 MULTIMACH_TARGET_SYS_CM3_append = "${TARGET_VENDOR_CM3}"
 MULTIMACH_TARGET_SYS_CM3_append = "-${TARGET_OS_CM3}"
 
-WORKDIR_CM3 = "${BASE_WORKDIR}/"
-WORKDIR_CM3_append = "${MULTIMACH_TARGET_SYS_CM3}/"
-WORKDIR_CM3_append = "${PN}/${PV}-${PR}"
-
-STAGING_DIR_TARGET_CM3 = "${WORKDIR_CM3}/lib32-recipe-sysroot"
+STAGING_DIR_TARGET_CM3 = "${WORKDIR}/lib32-recipe-sysroot"
 STAGING_INCDIR_CM3 = "${STAGING_DIR_TARGET_CM3}/usr/include"
 
 export DIR_TARGET_CM3 = "${STAGING_DIR_TARGET_CM3}"
 export CROSS_CM3 = "${STAGING_BINDIR_NATIVE}/${TARGET_SYS_CM3}/${TARGET_SYS_CM3}-"
 export INCLUDE_CM3 = "${STAGING_INCDIR_CM3}"
 
-EXTRA_OEMAKE += " \
-    BL33=${DEPLOY_DIR_IMAGE}/u-boot.bin \
-    PLAT=${ATF_PLATFORM} \
-    DDR_TOPOLOGY=${ATF_DDR_TOPOLOGY} \
-    CLOCKSPRESET=${ATF_CLOCKSPRESET} \
-    BOOTDEV=${ATF_BOOT_DEV} \
-    PARTNUM=${ATF_BOOT_PART} \
+EXTRA_OEMAKE_append = ' \
+    HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}" \
+    BL33="${DEPLOY_DIR_IMAGE}/u-boot.bin" \
+    PLAT="${ATF_PLATFORM}" \
+    DDR_TOPOLOGY="${ATF_DDR_TOPOLOGY}" \
+    CLOCKSPRESET="${ATF_CLOCKSPRESET}" \
+    BOOTDEV="${ATF_BOOT_DEV}" \
+    PARTNUM="${ATF_BOOT_PART}" \
     MV_DDR_PATH="${WORKDIR}/mv-ddr" \
     WTP="${SRCDIR_a3700-utils}" \
     USE_COHERENT_MEM=0 \
     LOG_LEVEL=20 \
     DEBUG=0 \
     SECURE=1 \
-"
+'
 
 cleancm3 () {
     rm -rf "${DIR_TARGET_CM3}"

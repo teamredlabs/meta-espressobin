@@ -9,54 +9,43 @@ primary and secondary bootloader image to one image (4M).
 
 Signed-off-by: Jason Hung <jhung@globalscaletechnologies.com>
 ---
- Makefile | 56 ++++++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 8 deletions(-)
+ plat/marvell/a3700/common/a3700_common.mk | 46 ++++++++++++++++++++++++++++---
+ plat/marvell/a8k-p/common/a8kp_common.mk  |  2 +-
+ plat/marvell/a8k/common/a8k_common.mk     |  2 +-
+ plat/marvell/marvell.mk                   |  2 ++
+ 4 files changed, 46 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 5b67763..abe5beb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -139,7 +139,9 @@ endif
- 
- # Marvell images
- BOOT_IMAGE			:= boot-image.bin
--BOOT_ENC_IMAGE			:= boot-image-enc.bin
-+BOOT_ENC_IMAGE		:= boot-image-enc.bin
-+FLASH_IMAGE_PRI		:= flash-image-primary.bin
-+FLASH_IMAGE_SEC		:= flash-image-secondary.bin
- FLASH_IMAGE			:= flash-image.bin
- 
- ################################################################################
-@@ -499,10 +501,12 @@ PARTNUM			?= 0
+diff --git a/plat/marvell/a3700/common/a3700_common.mk b/plat/marvell/a3700/common/a3700_common.mk
+index c6e9601..0dc187e 100644
+--- a/plat/marvell/a3700/common/a3700_common.mk
++++ b/plat/marvell/a3700/common/a3700_common.mk
+@@ -66,9 +66,11 @@ PARTNUM			?= 0
  
  TIM_IMAGE		:= $$(grep "Image Filename:" -m 1 $(DOIMAGE_CFG) | cut -c 17-)
- TIMBLDARGS		:= $(MARVELL_SECURE_BOOT) $(BOOTDEV) $(IMAGESPATH) $(CLOCKSPATH) $(CLOCKSPRESET) \
+ TIMBLDARGS		:= $(MARVELL_SECURE_BOOT) $(BOOTDEV) $(IMAGESPATH) $(DOIMAGEPATH) $(CLOCKSPRESET) \
 -				$(DDR_TOPOLOGY) $(PARTNUM) $(DEBUG) $(DOIMAGE_CFG) $(TIMNCFG) $(TIMNSIG) 1
--TIMBLDUARTARGS		:= $(MARVELL_SECURE_BOOT) UART $(IMAGESPATH) $(CLOCKSPATH) $(CLOCKSPRESET) \
--				$(DDR_TOPOLOGY) 0 0 $(DOIMAGE_CFG) $(TIMNCFG) $(TIMNSIG) 0
--DOIMAGE_FLAGS		:= -r $(DOIMAGE_CFG) -v -D
 +				$(DDR_TOPOLOGY) $(PARTNUM) 1 $(DEBUG) $(DOIMAGE_CFG) $(TIMNCFG) $(TIMNSIG) 1
-+TIMBLD2ARGS		:= $(MARVELL_SECURE_BOOT) $(BOOTDEV) $(IMAGESPATH) $(CLOCKSPATH) $(CLOCKSPRESET) \
++TIMBLD2ARGS		:= $(MARVELL_SECURE_BOOT) $(BOOTDEV) $(IMAGESPATH) $(DOIMAGEPATH) $(CLOCKSPRESET) \
 +				$(DDR_TOPOLOGY) $(PARTNUM) 0 $(DEBUG) $(DOIMAGE_CFG) $(TIMNCFG) $(TIMNSIG) 1
-+TIMBLDUARTARGS	:= $(MARVELL_SECURE_BOOT) UART $(IMAGESPATH) $(CLOCKSPATH) $(CLOCKSPRESET) \
+ TIMBLDUARTARGS		:= $(MARVELL_SECURE_BOOT) UART $(IMAGESPATH) $(DOIMAGEPATH) $(CLOCKSPRESET) \
+-				$(DDR_TOPOLOGY) 0 0 $(DOIMAGE_CFG) $(TIMNCFG) $(TIMNSIG) 0
 +				$(DDR_TOPOLOGY) 0 1 0 $(DOIMAGE_CFG) $(TIMNCFG) $(TIMNSIG) 0
-+DOIMAGE_FLAGS	:= -r $(DOIMAGE_CFG) -v -D
+ DOIMAGE_FLAGS		:= -r $(DOIMAGE_CFG) -v -D
  
- else # PLAT != a3700
- #*********** A8K *************
-@@ -849,7 +853,7 @@ endif
- 	@mv $(subst .bin,_h.bin,$(WTMI_IMG)) $(BUILD_PLAT)/$(BUILD_UART)/wtmi_h.bin
+ 
+@@ -151,7 +153,7 @@ endif
+ 	@mv $(subst .bin,_h.bin,$(WTMI_MULTI_IMG)) $(BUILD_PLAT)/$(BUILD_UART)/wtmi_h.bin
  	@tar czf $(BUILD_PLAT)/$(BUILD_UART).tgz -C $(BUILD_PLAT) ./$(BUILD_UART)
  	@echo
 -	@echo "Building flash image"
 +	@echo "Building primary flash image"
  	$(TIMBUILD) $(TIMBLDARGS)
- 	sed -i 's|WTMI_IMG|$(WTMI_IMG)|1' $(DOIMAGE_CFG)
+ 	sed -i 's|WTMI_IMG|$(WTMI_MULTI_IMG)|1' $(DOIMAGE_CFG)
  	sed -i 's|BOOT_IMAGE|$(BUILD_PLAT)/$(BOOT_IMAGE)|1' $(DOIMAGE_CFG)
-@@ -871,15 +875,51 @@ endif
+@@ -175,7 +177,43 @@ endif
  	$(DOIMAGETOOL) $(DOIMAGE_FLAGS)
  	@if [ -e "$(TIMNCFG)" ]; then $(DOIMAGETOOL) -r $(TIMNCFG); fi
- 	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then sed -i 's|$(WTMI_IMG)|$(WTMI_ENC_IMG)|1;s|$(BOOT_IMAGE)|$(BOOT_ENC_IMAGE)|1;' $(TIMNCFG); fi
+ 	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then sed -i 's|$(WTMI_MULTI_IMG)|$(WTMI_ENC_IMG)|1;s|$(BOOT_IMAGE)|$(BOOT_ENC_IMAGE)|1;' $(TIMNCFG); fi
 -	$(TIM2IMG) $(TIM2IMGARGS) -o $(BUILD_PLAT)/$(FLASH_IMAGE)
 +	$(TIM2IMG) $(TIM2IMGARGS) -o $(BUILD_PLAT)/$(FLASH_IMAGE_PRI)
 +#	@mv -t $(BUILD_PLAT) $(TIM_IMAGE) $(DOIMAGE_CFG) $(TIMN_IMAGE) $(TIMNCFG) $(WTMI_IMG)
@@ -86,7 +75,7 @@ index 5b67763..abe5beb 100644
 +	@if [ -e "$(TIMNCFG)" ]; then $(DOIMAGETOOL) -r $(TIMNCFG); fi
 +	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then sed -i 's|$(WTMI_IMG)|$(WTMI_ENC_IMG)|1;s|$(BOOT_IMAGE)|$(BOOT_ENC_IMAGE)|1;' $(TIMNCFG); fi
 +	$(TIM2IMG) $(TIM2IMGARGS) -o $(BUILD_PLAT)/$(FLASH_IMAGE_SEC)
- 	@mv -t $(BUILD_PLAT) $(TIM_IMAGE) $(DOIMAGE_CFG) $(TIMN_IMAGE) $(TIMNCFG) $(WTMI_IMG)
+ 	@mv -t $(BUILD_PLAT) $(TIM_IMAGE) $(DOIMAGE_CFG) $(TIMN_IMAGE) $(TIMNCFG) $(WTMI_IMG) $(WTMI_SYSINIT_IMG) $(WTMI_MULTI_IMG)
  	@if [ "$(MARVELL_SECURE_BOOT)" = "1" ]; then mv -t $(BUILD_PLAT) $(WTMI_ENC_IMG) OtpHash.txt; fi
  	@find . -name "*.txt" | grep -E "CSK[[:alnum:]]_KeyHash.txt|Tim_msg.txt|TIMHash.txt" | xargs rm -f
 +	@echo
@@ -98,15 +87,40 @@ index 5b67763..abe5beb 100644
 +	@cat ${BUILD_PLAT}/primary.img ${BUILD_PLAT}/secondary.img > ${BUILD_PLAT}/${FLASH_IMAGE}
 +	@echo "Output combine image: ${BUILD_PLAT}/${FLASH_IMAGE}"
 +	@rm ${BUILD_PLAT}/primary.img ${BUILD_PLAT}/secondary.img
- else
- fip: ${BUILD_PLAT}/${FIP_NAME} ${DOIMAGETOOL} ${BUILD_PLAT}/ble.bin
+diff --git a/plat/marvell/a8k-p/common/a8kp_common.mk b/plat/marvell/a8k-p/common/a8kp_common.mk
+index 87832a4..e70bddf 100644
+--- a/plat/marvell/a8k-p/common/a8kp_common.mk
++++ b/plat/marvell/a8k-p/common/a8kp_common.mk
+@@ -140,4 +140,4 @@ $(eval $(call MAKE_BL,e))
+ mrvl_flash: ${BUILD_PLAT}/${FIP_NAME} ${DOIMAGETOOL} ${BUILD_PLAT}/ble.bin
  	$(shell truncate -s %128K ${BUILD_PLAT}/bl1.bin)
  	$(shell cat ${BUILD_PLAT}/bl1.bin ${BUILD_PLAT}/${FIP_NAME} > ${BUILD_PLAT}/${BOOT_IMAGE})
 -	${DOIMAGETOOL} ${DOIMAGE_FLAGS} ${BUILD_PLAT}/${BOOT_IMAGE} ${BUILD_PLAT}/${FLASH_IMAGE}
 +	${DOIMAGETOOL} ${DOIMAGE_FLAGS} ${BUILD_PLAT}/${BOOT_IMAGE} ${BUILD_PLAT}/${FLASH_IMAGE_PRI}
- endif
- else
- fip: ${BUILD_PLAT}/${FIP_NAME}
+diff --git a/plat/marvell/a8k/common/a8k_common.mk b/plat/marvell/a8k/common/a8k_common.mk
+index ba44063..34bd711 100644
+--- a/plat/marvell/a8k/common/a8k_common.mk
++++ b/plat/marvell/a8k/common/a8k_common.mk
+@@ -141,5 +141,5 @@ $(eval $(call MAKE_BL,e))
+ mrvl_flash: ${BUILD_PLAT}/${FIP_NAME} ${DOIMAGETOOL} ${BUILD_PLAT}/ble.bin
+ 	$(shell truncate -s %128K ${BUILD_PLAT}/bl1.bin)
+ 	$(shell cat ${BUILD_PLAT}/bl1.bin ${BUILD_PLAT}/${FIP_NAME} > ${BUILD_PLAT}/${BOOT_IMAGE})
+-	${DOIMAGETOOL} ${DOIMAGE_FLAGS} ${BUILD_PLAT}/${BOOT_IMAGE} ${BUILD_PLAT}/${FLASH_IMAGE}
++	${DOIMAGETOOL} ${DOIMAGE_FLAGS} ${BUILD_PLAT}/${BOOT_IMAGE} ${BUILD_PLAT}/${FLASH_IMAGE_PRI}
+ 
+diff --git a/plat/marvell/marvell.mk b/plat/marvell/marvell.mk
+index 2a2da3b..6d289d6 100644
+--- a/plat/marvell/marvell.mk
++++ b/plat/marvell/marvell.mk
+@@ -6,6 +6,8 @@
+ # Marvell images
+ BOOT_IMAGE			:= boot-image.bin
+ BOOT_ENC_IMAGE			:= boot-image-enc.bin
++FLASH_IMAGE_PRI			:= flash-image-primary.bin
++FLASH_IMAGE_SEC			:= flash-image-secondary.bin
+ FLASH_IMAGE			:= flash-image.bin
+ 
+ # Make non-trusted image by default
 -- 
 1.9.1
 
